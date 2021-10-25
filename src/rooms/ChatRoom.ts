@@ -1,7 +1,8 @@
 import { Room, Client } from "colyseus";
 import { MyRoomState } from "./schema/MyRoomState";
 
-export class MyRoom extends Room<MyRoomState> {
+export class ChatRoom extends Room<MyRoomState> {
+   maxMessages: number = 100;
 
   onCreate (options: any) {
     this.setState(new MyRoomState());
@@ -9,7 +10,9 @@ export class MyRoom extends Room<MyRoomState> {
       console.log("ChatRoom received message from", client.sessionId, ":", message);
       this.broadcast("message", `${client.sessionId}: ${message}`);
       this.state.messages.push(`${client.sessionId}: ${message}`);
-
+      if (this.state.messages.length > this.maxMessages) {
+        this.state.messages.shift();
+      }
     });
   }
 
