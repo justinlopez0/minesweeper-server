@@ -5,13 +5,12 @@ export class MyRoom extends Room<MyRoomState> {
 
   onCreate (options: any) {
     this.setState(new MyRoomState());
+    this.onMessage("message", (client, message) => {
+      console.log("ChatRoom received message from", client.sessionId, ":", message);
+      this.broadcast("message", `${client.sessionId}: ${message}`);
+      this.state.messages.push(`${client.sessionId}: ${message}`);
 
-    this.onMessage("type", (client, message) => {
-      //
-      // handle "type" message
-      //
     });
-
   }
 
   onJoin (client: Client, options: any) {
